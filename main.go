@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	"github.com/mysterybee07/userlogin/databases"
+	"github.com/mysterybee07/userlogin/routes"
 )
 
 func main() {
@@ -17,5 +18,6 @@ func main() {
 	}
 	port := os.Getenv("PORT")
 	app := fiber.New()
+	routes.Setup(app)
 	app.Listen(":" + port)
 }

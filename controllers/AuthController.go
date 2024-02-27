@@ -16,6 +16,15 @@ func Register(c *fiber.Ctx) error {
 		fmt.Println("Unable to parse")
 	}
 
+	if len(data["password"].(string)) < 6 {
+		c.Status(200)
+		return c.JSON(fiber.Map{
+			"message": "Password too short",
+		})
+	}
+
+	// first_name, err := data["first_name"].(string)
+
 	user := models.Users{
 		FirstName: data["first_name"].(string),
 		LastName:  data["last_name"].(string),
