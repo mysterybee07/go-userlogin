@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/mysterybee07/userlogin/databases"
 	"github.com/mysterybee07/userlogin/models"
 )
 
@@ -39,6 +40,29 @@ func Register(c *fiber.Ctx) error {
 
 }
 
-// func Login(c *fiber.Ctx) error {
+func Login(c *fiber.Ctx) error {
+	var data map[string]interface{}
+	if err := c.BodyParser(&data); err != nil {
+		fmt.Println("Unable to parse")
+	}
 
-// }
+	var user *models.Users
+	databases.DB.Where("email?", data["email"]).First(&user)
+	if user.ID == 0 {
+		c.Status(200)
+		return c.JSON(fiber.Map{
+			"message": "Account not found",
+		})
+	}
+
+	if user.Password == data["password"].(string) {
+		c.Status(200)
+		return c.JSON(fiber.Map{
+			"message": "Incorrect password",
+		})
+	}
+	return c.JSON(fiber.Map{
+		"message": "Login Successful",
+	})
+
+}
