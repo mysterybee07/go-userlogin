@@ -10,22 +10,26 @@ import (
 	"gorm.io/gorm"
 )
 
+// DB is the global variable for database connection
 var DB *gorm.DB
 
+// Connect initializes the database connection and sets up migrations
 func Connect() {
 	err := godotenv.Load()
 	if err != nil {
-		fmt.Println("Error loading.env file")
+		fmt.Println("Error loading .env file")
 	}
 
 	dsn := os.Getenv("DSN")
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
-	} else {
-		fmt.Println("Connected to database successfully")
 	}
+
+	fmt.Println("Connected to database successfully")
 	DB = db
+
+	// AutoMigrate will automatically create the table based on the User struct
 	db.AutoMigrate(
 		&models.Users{},
 	)
